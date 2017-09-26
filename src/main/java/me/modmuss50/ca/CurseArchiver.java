@@ -4,6 +4,7 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
+import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -124,7 +125,7 @@ public class CurseArchiver {
 			}
 			try {
 				System.out.println("        Downloading file: " + file.name + " for project " + project.id);
-				FileUtils.copyURLToFile(new URL(file.url), jFile);
+				FileUtils.copyURLToFile(new URL(UrlEscapers.urlFragmentEscaper().escape(file.url)), jFile);
 
 				FileData fileData = new FileData(file, jFile);
 				FileUtils.writeStringToFile(jFileData, gson.toJson(fileData), StandardCharsets.UTF_8);
