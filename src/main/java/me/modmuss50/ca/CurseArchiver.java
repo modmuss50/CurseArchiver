@@ -115,16 +115,14 @@ public class CurseArchiver {
 			} else if (fileDataMap.containsKey(fileId) && jFile.exists()) {
 				//Checks the hash, if the file is good we skip it
 				FileData data = fileDataMap.get(fileId);
-				if (!data.sha256.isEmpty() && hash(jFile, Hashing.sha256()).equals(data.sha256)) {
+				if (!data.crc32.isEmpty() && hash(jFile, Hashing.crc32()).equals(data.crc32)) {
 					return;
 				}
 			}
 			try {
 				System.out.println("        Downloading file: " + file.name + " for project " + project.id);
 				FileUtils.copyURLToFile(new URL(UrlEscapers.urlFragmentEscaper().escape(file.url)), jFile);
-
 				FileData fileData = new FileData(file, jFile);
-				FileUtils.writeStringToFile(jFileData, gson.toJson(fileData), StandardCharsets.UTF_8);
 				fileDataMap.put(fileId, fileData);
 			} catch (IOException e) {
 				log(e);
@@ -168,6 +166,7 @@ public class CurseArchiver {
 		String sha1;
 		String md5;
 		String sha256;
+		String crc32;
 		String filename;
 
 		public FileData(CleanedRaw.File curseFileInfo, File file) {
@@ -175,6 +174,7 @@ public class CurseArchiver {
 			this.sha1 = hash(file, Hashing.sha1());
 			this.sha256 = hash(file, Hashing.sha256());
 			this.md5 = hash(file, Hashing.md5());
+			this.crc32 = hash(file, Hashing.crc32());
 			this.filename = file.getName();
 		}
 	}
