@@ -110,17 +110,13 @@ public class CurseArchiver {
 			}
 			File jFile = new File(fileStore, file.id + "-" + file.filename);
 			File jFileData = new File(fileStore, file.id + "-" + file.filename + ".json");
-			if ((!jFileData.exists() && jFile.exists()) && !alwaysHashCheck()) { //If the file exists and no data json is found, skip it
+			if (jFile.exists() && !alwaysHashCheck()) { //If the file exists and no data json is found, skip it
 				return;
-			} else if (jFileData.exists() && jFile.exists()) {
-				try {
-					//Reas the data json and cheks the hash, if the file is good we skip it
-					FileData data = gson.fromJson(FileUtils.readFileToString(jFileData, StandardCharsets.UTF_8), FileData.class);
-					if (!data.sha256.isEmpty() && hash(jFile, Hashing.sha256()).equals(data.sha256)) {
-						return;
-					}
-				} catch (IOException e) {
-					log(e);
+			} else if (fileDataMap.containsKey(fileId) && jFile.exists()) {
+				//Checks the hash, if the file is good we skip it
+				FileData data = fileDataMap.get(fileId);
+				if (!data.sha256.isEmpty() && hash(jFile, Hashing.sha256()).equals(data.sha256)) {
+					return;
 				}
 			}
 			try {
