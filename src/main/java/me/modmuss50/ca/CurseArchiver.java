@@ -52,7 +52,7 @@ public class CurseArchiver {
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Downloading curse meta...");
-		FileUtils.copyURLToFile(new URL("https://cursemeta.dries007.net/cleaned_raw.json"), curseMeta);
+		FileUtils.copyURLToFile(new URL("https://cursemeta.dries007.net/raw_cleaned.json"), curseMeta);
 		System.out.println("Reading json");
 		CleanedRaw projects = gson.fromJson(FileUtils.readFileToString(curseMeta, StandardCharsets.UTF_8), CleanedRaw.class);
 		//Gets a count of the projects that need to be processed
